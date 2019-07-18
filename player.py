@@ -37,7 +37,7 @@ class Player(object):
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        print('Training at seed = {}'.format(self.config.random_seed))
+        print(('Training at seed = {}'.format(self.config.random_seed)))
 
         self.game_size = np.shape(self.Env.render())
         self.input_channels = self.game_size[2]
@@ -126,7 +126,7 @@ class Player(object):
         elif self.config.level_switch == 'random':
             # else:
 
-            self.Env.lvl = np.random.choice(range(len(self.Env.env_list) - 1))
+            self.Env.lvl = np.random.choice(list(range(len(self.Env.env_list) - 1)))
             self.Env.set_level(self.Env.lvl)
 
             return 0
@@ -143,7 +143,7 @@ class Player(object):
 
             if self.episode_reward > self.best_reward or self.steps % 50000:
                 self.best_reward = self.episode_reward
-                print("New Best Reward: {}".format(self.best_reward))
+                print(("New Best Reward: {}".format(self.best_reward)))
                 self.save_model()
 
     def select_action(self):
@@ -165,11 +165,10 @@ class Player(object):
         transitions = self.memory.sample(self.config.batch_size)
         # Transpose the batch (see http://stackoverflow.com/a/19343/3343043 for
         # detailed explanation).
-        batch = self.Transition(*zip(*transitions))
+        batch = self.Transition(*list(zip(*transitions)))
 
         # Compute a mask of non-final states and concatenate the batch elements
-        non_final_mask = torch.tensor(tuple(map(lambda s: s is not None,
-                                                batch.next_state)), device=self.device, dtype=torch.uint8)
+        non_final_mask = torch.tensor(tuple([s is not None for s in batch.next_state]), device=self.device, dtype=torch.uint8)
         non_final_next_states = torch.cat([s for s in batch.next_state
                                            if s is not None])
         state_batch = torch.cat(batch.state)
@@ -219,7 +218,7 @@ class Player(object):
     def train_model(self):
 
         print("Training Starting")
-        print("-" * 25)
+        print(("-" * 25))
 
         if self.config.pretrain:
             print("Loading Model")
@@ -338,14 +337,14 @@ class Player(object):
                 with open('object_interaction_histories/{}_object_interaction_history_{}_trial{}.csv'.format(
                         self.config.game_name, self.config.level_switch, self.config.trial_num), "ab") as file:
                     interactionfilewriter = csv.writer(file)
-                    for event_name, count in event_dict.items():
+                    for event_name, count in list(event_dict.items()):
                         row = ('DDQN', 'NA', 'NA', self.config.game_name, self.Env.lvl, self.episode, event_name, count)
                         interactionfilewriter.writerow(row)
 
                 self.episode += 1
 
                 # pdb.set_trace()
-                print("Level {}, episode reward at step {}: {}".format(self.Env.lvl, self.steps, self.episode_reward))
+                print(("Level {}, episode reward at step {}: {}".format(self.Env.lvl, self.steps, self.episode_reward)))
                 sys.stdout.flush()
 
                 # Update the target network

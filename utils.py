@@ -26,7 +26,7 @@ def load_game(game_name, games_folder):
 
 	def _gen_color():
 		from vgdl.colors import colorDict
-		color_list = colorDict.values()
+		color_list = list(colorDict.values())
 		color_list = [c for c in color_list if c not in ['UUWSWF']]
 		for color in color_list:
 			yield color
@@ -73,9 +73,9 @@ def load_game(game_name, games_folder):
 
 	env_list = {}
 
-	num_levels = len(file_list.keys())-1
+	num_levels = len(list(file_list.keys()))-1
 	if 'expt_ee' in game_name:
-		num_levels = int(len(file_list.keys())/2)
+		num_levels = int(len(list(file_list.keys()))/2)
 
 	for lvl_idx in range(num_levels):
 

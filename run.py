@@ -39,7 +39,7 @@ print(config)
 
 config.file_names = 'all_games/'
 
-print("Game: {}".format(config.game_name))
+print(("Game: {}".format(config.game_name)))
 
 for trial_num in range(config.num_trials):
 
