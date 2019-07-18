@@ -25,6 +25,7 @@ import time
 import os
 import uuid
 from .util import getObjectColor
+from .ontology import * # @UnusedWildImport
 
 # ---------------------------------------------------------------------
 #     Constants
@@ -105,7 +106,6 @@ class VGDLParser(object):
         """ Whatever is visible in the global namespace (after importing the ontologies)
         can be used in the VGDL, and is evaluated.
         """
-        from .ontology import * # @UnusedWildImport
         return eval(estr)
 
     def parseInteractions(self, inodes):
